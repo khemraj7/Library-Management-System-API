@@ -42,8 +42,43 @@ const loginUser = async (req, res) => {
     }
 };
 
+//Get user By id
+const getUserById = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id)
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Update user details
+const updateUser = async (req, res) => {
+    try {
+        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!user) return res.status(404).json({ message: 'user not found' });
+        res.json(user);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+// Delete a user
+const deleteUser = async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.params.id);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        res.json({ message: 'user removed' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     registerUser,
     getUsers,
-    loginUser
+    loginUser,
+    getUserById,
+    updateUser,
+    deleteUser
 }
